@@ -76,7 +76,7 @@ if [ $# == 0 ] ; then
 fi
 
 # get command line arguements
-while getopts s:t:v:m:n:h:u:d:o: opt; do
+while getopts hs:t:v:m:n:u:d:o: opt; do
   case $opt in
   s)
       source_path=$OPTARG
