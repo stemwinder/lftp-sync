@@ -2,14 +2,16 @@
 A simple interface for using lftp to mirror remote data structures based on file modification times.
 
 ## Setup
-* Download or clone the repository to the instllation path of choice on the target machine.
-* Copy `lftp-sync-defaults.cfg` to `lftp-sync.cfg` and add/change parameters
-* Ensure the user issuing lftp-sync commands has write permissions to the installation and `lftp-output` directories
+- Download or clone the repository to the instllation path of choice on the target machine.
+- Copy `lftp-sync-defaults.cfg` to `lftp-sync.cfg` and add/change parameters
+- Ensure the user issuing lftp-sync commands has write permissions to the installation and `lftp-output` directories
 
 ## Usage
 Basic usage:
+
     ./lftp-sync.sh -s "/remote/source/path/" -t "/path/to/target"
 With verbose logging, override date, and download limit:
+
     ./lftp-sync.sh -s "/remote/source/path/" -t "/path/to/target" -v 3 -o "2015-02-20" -d 5M
 
 ## Caveats
@@ -22,7 +24,7 @@ With verbose logging, override date, and download limit:
 ## To Do's
 * Detect OS X and use `gdate` and `greadlink` instead
 * Ability to run from any path location
-** Currently must be run from parent directory
+    * Currently must be run from parent directory
 * Ability to specify logfile locations as arguments
 * Support for more verbose argument names
 * Add "dry run" lftp feature support
