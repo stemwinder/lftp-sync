@@ -1,4 +1,17 @@
 #!/bin/bash
+########################################################################
+#
+# lftp-sync:    A simple interface for using lftp to mirror remote data
+#               structures based on file modification times.
+# Author:       Joshua Smith
+# Contact:      <josh@stemwinder.net>
+#
+# Changelog (sorted newest -> oldest):
+#   - 2015-03-01:   Adds support for OS X; Changes config file name; Adds
+#                   large changes to README.md
+#   - 2015-02-28:   Initial work on timespec syncing and logging
+#
+########################################################################
 
 # support for `coreutils` on OS X
 if [[ $OSTYPE == darwin* ]]; then

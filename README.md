@@ -19,14 +19,16 @@ With verbose logging, override date, and download limit:
 * All dates are converted to UTC before being used for input or output.
 * Usage on OS X requires `greadlink` and `gdate` provided by Homebrew `coreutils`.
 * Overriding the time spec from the command line will not produce an entry in `lftp-timestamps.log`.
-    * The override datetime provided at the command line will be passed to and translated by `date`
+* The override datetime provided at the command line will be passed to and translated by `date`
 * Download and upload limits are passed directly to the `set net:limit-total-rate` lftp command and must conform to its format specifications. The default is bytes, but suffixes are supported (eg: 100K, 5M, ...)
 
 ## To Do's
 * ~~Detect OS X and use `gdate` and `greadlink` instead~~
 * Ability to run from any path location
     * Currently must be run from parent directory
+* Add "dry run" lftp feature support
+* Support for ssh keys
+* Remove password from `lftp-output` logs
 * Ability to specify logfile locations as arguments
 * Support for more verbose argument names
-* Add "dry run" lftp feature support
 * Support for non-time-based mirroring
