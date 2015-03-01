@@ -24,50 +24,48 @@ fi
 
 # set path and name variables
 this_path=$("$readlink_cmd" -f $0)  ## Path of this file including filename
-dir_name=`dirname ${this_path}`     ## Dir where this file is
-myname=`basename ${this_path}`      ## file name of this script.
-
-echo $this_path; echo $dir_name; echo $myname; exit 1
+dir_name=`dirname ${this_path}`     ## Parent directory of this file WITHOUT trailing slash
+myname=`basename ${this_path}`      ## file name of this script
 
 # inlcude default config settings
-if [ ! -f "./lftp-sync.cfg" ] ; then
+if [ ! -f "$dir_name/lftp-sync.cfg" ] ; then
     echo "No config file was found. Exiting."
     exit 1
 else
-    source ./lftp-sync.cfg
+    source "$dir_name/lftp-sync.cfg"
 fi
 
 # define and display help info to the user
 function help {
-  echo "
-  usage: lftp-sync [options]
-  -h        optional  Print this help message
-  -s        required  Path to remote source.
+    echo "
+    usage: lftp-sync.sh [options]
+    -h      optional  Print this help message
+    -s      required  Path to remote source.
             Adding or removing a trailing slash will affect the behaviour.
-  -t        required  Path to local target.
+    -t      required  Path to local target.
             Adding or removing a trailing slash will affect the behaviour.
-  -v        optional  Lftp mirror verbosity level
+    -v      optional  Lftp mirror verbosity level
             default is 0, options are 1, 2 and 3
-  -m        optional  Number of parallel downloads.
+    -m      optional  Number of parallel downloads.
             Smaller files will benefit from more concurrent downloads.
             default is 15
-  -n        optional  Number of pget segments per download.
+    -n      optional  Number of pget segments per download.
             Larger files will benefit from higher segment counts.
             default is 10
-  -u        optional  Total Upload limit
+    -u      optional  Total Upload limit
             default is 0 (unlimited)
             This argument is passed directly to lftp
-  -d        optional  Total Download limit
+    -d      optional  Total Download limit
             default is 0 (unlimited)
             This argument is passed directly to lftp
-  -o        optional  Time override (--newer-than)
+    -o      optional  Time override (--newer-than)
             Overrides the default time behaviour of script"
-  exit 1
+    exit 1
 }
 
 # write input to log file
 function log {
-    echo "[`date`] - ${*}" >> ${log_file}
+    echo "[`date`] - ${*}" >> "$dir_name/$log_file"
 }
 
 # If no arguments are passed to this script, it should always show the usage info.
@@ -122,8 +120,8 @@ fi
 log "Begin script execution"
 
 # create time logfile if doesn't exist
-if [ ! -f "$time_log_file" ] ; then
-    touch "$time_log_file"
+if [ ! -f "$dir_name/$time_log_file" ] ; then
+    touch "$dir_name/$time_log_file"
     log "Time logfile had to be created"
 fi
 
@@ -133,7 +131,7 @@ until $DONE ;do
   read || DONE=true
   [[ ! $REPLY ]] && continue
   TIME_FROM_LOG="$REPLY"
-done < "$time_log_file"
+done < "$dir_name/$time_log_file"
 
 # check if we got a timestamp from logfile,
 # if not, set TIMESPEC to current datetime in UTC
@@ -151,14 +149,14 @@ if ! [[ -z "$newer_than" ]]; then
   log "TIMESPEC was overriden from command line ($TIMESPEC)"
 else
   # write current time to logfile in UTC if timespec wasn't overriden
-  echo "$("$date_cmd" -u +"%Y-%m-%d %H:%M:%S")" >> "$time_log_file"
+  echo "$("$date_cmd" -u +"%Y-%m-%d %H:%M:%S")" >> "$dir_name/$time_log_file"
 fi
 
 # execute lftp command
 log "Start lftp sync"
-lftp_command="lftp -c \"connect -u $username,$password sftp://$server:$port; set net:limit-total-rate $dl_limit:$ul_limit; mirror -p --verbose=$verbosity --no-empty-dirs --newer-than=\\\"$TIMESPEC\\\" --parallel=$streams --use-pget-n=$segments \\\"$source_path\\\" \\\"$target_path\\\"; quit\""
+lftp_command="lftp -c \"connect -u $username,$password sftp://$server:$port; set net:limit-total-rate $dl_limit:$ul_limit; mirror $lftp_mirror_args --verbose=$verbosity --newer-than=\\\"$TIMESPEC\\\" --parallel=$streams --use-pget-n=$segments \\\"$source_path\\\" \\\"$target_path\\\"; quit\""
 log $lftp_command
-eval $lftp_command 2>&1 | tee "$lftp_log_dir$("$date_cmd" +"%Y-%m-%d_%H:%M:%S_%Z").log"
+eval $lftp_command 2>&1 | tee "$dir_name/$lftp_log_dir/$("$date_cmd" +"%Y-%m-%d_%H:%M:%S_%Z").log"
 
 # exit script with success code
 log "Script execution complete"

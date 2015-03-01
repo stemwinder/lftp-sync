@@ -5,6 +5,7 @@ A simple interface for using lftp to mirror remote data structures based on file
 - Download or clone the repository to the instllation path of choice on the target machine.
 - Copy `lftp-sync-defaults.cfg` to `lftp-sync.cfg` and add/change parameters
 - Ensure the user issuing lftp-sync commands has write permissions to the installation and `lftp-output` directories
+- Set execution permission on `lftp-sync.sh`
 
 ## Usage
 Basic usage:
@@ -21,14 +22,15 @@ With verbose logging, override date, and download limit:
 * Overriding the time spec from the command line will not produce an entry in `lftp-timestamps.log`.
 * The override datetime provided at the command line will be passed to and translated by `date`
 * Download and upload limits are passed directly to the `set net:limit-total-rate` lftp command and must conform to its format specifications. The default is bytes, but suffixes are supported (eg: 100K, 5M, ...)
+* Stream and segment settings have aggressive default settings to enable fast transfer of many large files. The default settings will generate a maximum of ~150 total connections.
 
 ## To Do's
 * ~~Detect OS X and use `gdate` and `greadlink` instead~~
-* Ability to run from any path location
-    * Currently must be run from parent directory
+* ~~Ability to run from any path location~~
 * Add "dry run" lftp feature support
 * Support for ssh keys
 * Remove password from `lftp-output` logs
 * Ability to specify logfile locations as arguments
 * Support for more verbose argument names
 * Support for non-time-based mirroring
+* lftp `mirror` command argument passthrough from command line
