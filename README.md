@@ -34,3 +34,4 @@ With verbose logging, override date, and download limit:
 * Support for more verbose argument names
 * Support for non-time-based mirroring
 * lftp `mirror` command argument passthrough from command line
+* Prevent conflicts from concurrent/overlapping instances of `lftp-sync`
