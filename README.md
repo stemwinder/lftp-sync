@@ -10,13 +10,12 @@ A simple interface for using lftp to mirror remote data structures based on file
 ## Usage
 Basic usage:
 
-    ./lftp-sync.sh -s "/remote/source/path/" -t "/path/to/target"
+    lftp-sync.sh -s "/remote/source/path/" -t "/path/to/target"
 With verbose logging, override date, and download limit:
 
-    ./lftp-sync.sh -s "/remote/source/path/" -t "/path/to/target" -v 3 -o "2015-02-20" -d 5M
+    lftp-sync.sh -s "/remote/source/path/" -t "/path/to/target" -v 3 -o "2015-02-20" -d 5M
 
-## Caveats
-* The `lftp-sync.sh` command must currently be issued from its parent directory.
+## Caveats & Notes
 * All dates are converted to UTC before being used for input or output.
 * Usage on OS X requires `greadlink` and `gdate` provided by Homebrew `coreutils`.
 * Overriding the time spec from the command line will not produce an entry in `lftp-timestamps.log`.
